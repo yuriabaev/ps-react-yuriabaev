@@ -1,95 +1,54 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import ProgressBar from '../ProgressBar';
-import EyeIcon from '../EyeIcon';
-import TextInput from '../TextInput';
+import renderer from 'react-test-renderer';
+import PasswordInput from './PasswordInput';
+import {shallow} from 'enzyme';
 
-/** Password input with integrated label, quality tips, and show password toggle. */
-class PasswordInput extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showPassword: false
-        }
-    }
+test('toggles input type when show/hide password clicked', () => {
+    const wrapper = shallow(<PasswordInput
+            htmlId="test"
+            name="test"
+            value=""
+            onChange={() => {}}
+            showVisibilityToggle
+        />
+    );
 
-    toggleShowPassword = event => {
-        this.setState(prevState => {
-            return { showPassword: !prevState.showPassword };
-        });
-        if (event) event.preventDefault();
-    }
+    // Password input should have a type of password initially
+    expect(wrapper.find({type: 'password'})).toHaveLength(1);
+    expect(wrapper.find({type: 'text'})).toHaveLength(0);
 
-    render() {
-        const { htmlId, value, label, error, onChange, placeholder, maxLength, showVisibilityToggle, quality, ...props } = this.props;
-        const { showPassword } = this.state;
-        console.log(this.props.toString())
+    wrapper.find('a').simulate('click');
 
-        return (
-            <TextInput
-                htmlId={htmlId}
-                label={label}
-                placeholder={placeholder}
-                type={showPassword ? 'text' : 'password'}
-                onChange={onChange}
-                value={value}
-                maxLength={maxLength}
-                error={error}
-                required
-                {...props}>
-                {
-                    showVisibilityToggle &&
-                    <a
-                        href=""
-                        onClick={this.toggleShowPassword}
-                        style={{ marginLeft: 5 }}>
-                        <EyeIcon />
-                    </a>
-                }
-                {
-                    value.length > 0 && quality && <ProgressBar percent={quality} width={130} />
-                }
-            </TextInput>
-        );
-    }
-}
+    // Password input should have a type of text after clicking toggle
+    expect(wrapper.find({type: 'password'})).toHaveLength(0);
+    expect(wrapper.find({type: 'text'})).toHaveLength(1);
+});
 
-PasswordInput.propTypes = {
-    /** Unique HTML ID. Used for tying label to HTML input. Handy hook for automated testing. */
-    htmlId: PropTypes.string.isRequired,
-
-    /** Input name. Recommend setting this to match object's property so a single change handler can be used by convention.*/
-    name: PropTypes.string.isRequired,
-
-    /** Password value */
-    value: PropTypes.any,
-
-    /** Input label */
-    label: PropTypes.string,
-
-    /** Function called when password input value changes */
-    onChange: PropTypes.func.isRequired,
-
-    /** Max password length accepted */
-    maxLength: PropTypes.number,
-
-    /** Placeholder displayed when no password is entered */
-    placeholder: PropTypes.string,
-
-    /** Set to true to show the toggle for displaying the currently entered password */
-    showVisibilityToggle: PropTypes.bool,
-
-    /** Display password quality visually via ProgressBar, accepts a number between 0 and 100 */
-    quality: PropTypes.number,
-
-    /** Validation error to display */
-    error: PropTypes.string
-};
-
-PasswordInput.defaultProps = {
-    maxLength: 50,
-    showVisibilityToggle: false,
-    label: 'Password'
-};
-
-export default PasswordInput;
+test('hides password quality by default', () => {
+    const tree = renderer.create(<PasswordInput
+        htmlId="test"
+        name="test"
+        onChange={() => {}}
+        value="Uisi38#8iad" />).toJSON();
+    expect(tree).toMatchSnapshot();
+});
+//
+// test('shows password quality when enabled and a password is entered', () => {
+//     const tree = renderer.create(<PasswordInput
+//         htmlId="test"
+//         name="test"
+//         onChange={() => {}}
+//         showQuality
+//         value="Uisi38#8iad" />).toJSON();
+//     expect(tree).toMatchSnapshot();
+// });
+//
+// test('hides password quality when enabled but no password is entered', () => {
+//     const tree = renderer.create(<PasswordInput
+//         htmlId="test"
+//         name="test"
+//         onChange={() => {}}
+//         showQuality
+//         value="" />).toJSON();
+//     expect(tree).toMatchSnapshot();
+// });

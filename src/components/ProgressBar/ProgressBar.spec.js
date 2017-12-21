@@ -1,43 +1,13 @@
+
 import React from 'react';
-import PropTypes from 'prop-types';
+import {shallow} from 'enzyme';
+import ProgressBar from './ProgressBar';
 
-class ProgressBar extends React.Component {
-    getColor = (percent) => {
-        if (this.props.percent === 100) return 'green';
-        return this.props.percent > 50 ? 'lightgreen' : 'red';
-    }
+describe('ProgressBar', () => {
+    test('getWidthAsPercentOfTotalWidth should return 250 with total width of 500 and percent of 50', () => {
+        const wrapper = shallow(<ProgressBar percent={50} width={500} />);
+        const width = wrapper.instance().getWidthAsPercentOfTotalWidth();
+        expect(width).toEqual(250);
+    });
+});
 
-    getWidthAsPercentOfTotalWidth = () => {
-        return parseInt(this.props.width * (this.props.percent / 100), 10);
-    }
-
-    render() {
-        const {percent, width, height} = this.props;
-        return (
-            <div style={{border: 'solid 1px lightgray', width: width}}>
-                <div style={{
-                    width: this.getWidthAsPercentOfTotalWidth(),
-                    height,
-                    backgroundColor: this.getColor(percent)
-                }} />
-            </div>
-        );
-    }
-}
-
-ProgressBar.propTypes = {
-    /** Percent of progress completed */
-    percent: PropTypes.number.isRequired,
-
-    /** Bar width */
-    width: PropTypes.number.isRequired,
-
-    /** Bar height */
-    height: PropTypes.number
-};
-
-ProgressBar.defaultProps = {
-    height: 5
-};
-
-export default ProgressBar;

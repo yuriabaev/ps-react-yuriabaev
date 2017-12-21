@@ -1,1 +1,2 @@
-export {default} from './TextInput';
+import  './TextInputBEM.css'
+export {default} from './TextInputBEM';

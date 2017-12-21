@@ -1,12 +1,12 @@
 
 import React from 'react';
-import TextInput from 'ps-react/TextInput';
+import TextInputBEM from 'ps-react/TextInputBEM';
 
 /** Optional TextBox */
 export default class ExampleOptional extends React.Component {
     render() {
         return (
-            <TextInput
+            <TextInputBEM
                 htmlId="example-optional"
                 label="First Name"
                 name="firstname"
