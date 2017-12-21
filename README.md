@@ -5,3 +5,6 @@ A library of React components created in [Creating Reusable React Components](ht
 ## Install
 ```
 npm install ps-react
+```
+
+[Docs](http://yuriabaev.github.io/ps-react-yuriabaev/)
